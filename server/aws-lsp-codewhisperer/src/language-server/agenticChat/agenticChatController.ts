@@ -942,14 +942,18 @@ export class AgenticChatController implements ChatHandlers {
         toolUse: ToolUse,
         resultStream: AgenticChatResultStream,
         promptBlockId: number,
-        session: ChatSessionService
+        session: ChatSessionService,
+        toolName: string
     ) {
         const deferred = this.#createDeferred()
         session.setDeferredToolExecution(toolUse.toolUseId!, deferred.resolve, deferred.reject)
-        this.#log(`Prompting for tool approval for tool: ${toolUse.name}`)
+        this.#log(`Prompting for tool approval for tool: ${toolName ?? toolUse.name}`)
         await deferred.promise
         // Note: we want to overwrite the button block because it already exists in the stream.
-        await resultStream.overwriteResultBlock(this.#getUpdateToolConfirmResult(toolUse, true), promptBlockId)
+        await resultStream.overwriteResultBlock(
+            this.#getUpdateToolConfirmResult(toolUse, true, toolName),
+            promptBlockId
+        )
     }
 
     /**
@@ -1055,7 +1059,13 @@ export class AgenticChatController implements ChatHandlers {
                                 )
                             }
                             if (requiresAcceptance) {
-                                await this.waitForToolApproval(toolUse, chatResultStream, cachedButtonBlockId, session)
+                                await this.waitForToolApproval(
+                                    toolUse,
+                                    chatResultStream,
+                                    cachedButtonBlockId,
+                                    session,
+                                    toolUse.name
+                                )
                             }
                             if (isExecuteBash) {
                                 this.#telemetryController.emitInteractWithAgenticChat(
@@ -1102,7 +1112,8 @@ export class AgenticChatController implements ChatHandlers {
                                         toolUse,
                                         chatResultStream,
                                         cachedButtonBlockId,
-                                        session
+                                        session,
+                                        toolName
                                     )
                                 }
 
@@ -1246,7 +1257,7 @@ export class AgenticChatController implements ChatHandlers {
                     // Handle ToolApprovalException for any tool
                     if (err instanceof ToolApprovalException && cachedButtonBlockId) {
                         await chatResultStream.overwriteResultBlock(
-                            this.#getUpdateToolConfirmResult(toolUse, false),
+                            this.#getUpdateToolConfirmResult(toolUse, false, toolUse.name),
                             cachedButtonBlockId
                         )
                         if (err.shouldShowMessage) {
@@ -1541,8 +1552,13 @@ export class AgenticChatController implements ChatHandlers {
      * @param toolType Optional tool type for specialized handling
      * @returns ChatResult with appropriate confirmation UI
      */
-    #getUpdateToolConfirmResult(toolUse: ToolUse, isAccept: boolean, toolType?: string): ChatResult {
-        const toolName = toolType || toolUse.name
+    #getUpdateToolConfirmResult(
+        toolUse: ToolUse,
+        isAccept: boolean,
+        originalToolName: string,
+        toolType?: string
+    ): ChatResult {
+        const toolName = originalToolName ?? (toolType || toolUse.name)
 
         // Handle bash commands with special formatting
         if (toolName === 'executeBash') {
@@ -1601,7 +1617,7 @@ export class AgenticChatController implements ChatHandlers {
                 break
 
             default:
-                // Default tool (not MCP)
+                // Default tool (not only MCP)
                 return {
                     type: 'tool',
                     messageId: toolUse.toolUseId!,
@@ -1609,7 +1625,7 @@ export class AgenticChatController implements ChatHandlers {
                         content: {
                             header: {
                                 icon: 'tools',
-                                body: `${toolUse.name}`,
+                                body: `${toolName}`,
                                 status: {
                                     status: isAccept ? 'success' : 'error',
                                     icon: isAccept ? 'ok' : 'cancel',
