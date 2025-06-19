@@ -108,7 +108,7 @@ export const Q_FINDING_SCHEMA = z.object({
     remediation: z.object({
         recommendation: z.object({
             text: z.string(),
-            url: z.string().optional(),
+            url: z.string().nullable().optional(),
         }),
     }),
     severity: z.enum(FINDING_SEVERITY as [string, ...string[]]),
@@ -118,6 +118,7 @@ export const Q_FINDING_SCHEMA = z.object({
     detectorName: z.string().optional(),
     ruleId: z.string().optional(),
     suggestedFixes: z.array(z.string().optional()).optional(),
+    findingContext: z.string().nullable().optional(),
 })
 
 /**
