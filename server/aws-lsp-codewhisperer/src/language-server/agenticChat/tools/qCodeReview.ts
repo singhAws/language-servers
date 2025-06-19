@@ -181,6 +181,7 @@ export class QCodeReview {
                             scanJobId: jobId,
                             language: programmingLanguage,
                             autoDetected: false,
+                            filePath: issue.filePath,
                         }
                     })
                 }
