@@ -300,9 +300,9 @@ export class AgenticChatController implements ChatHandlers {
             }
             params.buttonId === 'reject-shell-command' || params.buttonId === 'reject-mcp-tool'
                 ? (() => {
-                    handler.reject(new ToolApprovalException('Command was rejected.', true))
-                    this.#stoppedToolUses.add(messageId)
-                })()
+                      handler.reject(new ToolApprovalException('Command was rejected.', true))
+                      this.#stoppedToolUses.add(messageId)
+                  })()
                 : handler.resolve()
             return {
                 success: true,
@@ -389,7 +389,7 @@ export class AgenticChatController implements ChatHandlers {
             const updatedDetails = { ...fileList.details }
             for (const filePath of fileList.filePaths) {
                 if (updatedDetails[filePath]) {
-                    ; (updatedDetails[filePath] as any) = {
+                    ;(updatedDetails[filePath] as any) = {
                         ...updatedDetails[filePath],
                         clickable: false,
                     } as Partial<FileDetails>
@@ -823,7 +823,7 @@ export class AgenticChatController implements ChatHandlers {
                         codeReference: result.data.chatResult.codeReference,
                         relatedContent:
                             result.data.chatResult.relatedContent?.content &&
-                                result.data.chatResult.relatedContent.content.length > 0
+                            result.data.chatResult.relatedContent.content.length > 0
                                 ? result.data?.chatResult.relatedContent
                                 : undefined,
                         toolUses: Object.keys(result.data?.toolUses!)
@@ -1302,10 +1302,7 @@ export class AgenticChatController implements ChatHandlers {
                         await chatResultStream.writeResultBlock({
                             type: 'tool',
                             messageId: toolUse.toolUseId + '_findings',
-                            body: JSON.stringify({
-                                filePath: JSON.parse(JSON.stringify(toolUse.input))['fileLevelArtifacts'][0]['path'],
-                                issues: JSON.parse(qCodeReviewJson['result']['findings']),
-                            }),
+                            body: qCodeReviewJson['result']['findings'],
                         })
                         break
                     // — DEFAULT ⇒ MCP tools
@@ -1659,12 +1656,12 @@ export class AgenticChatController implements ChatHandlers {
                     ...(isAccept
                         ? {}
                         : {
-                            status: {
-                                status: 'error',
-                                icon: 'cancel',
-                                text: 'Rejected',
-                            },
-                        }),
+                              status: {
+                                  status: 'error',
+                                  icon: 'cancel',
+                                  text: 'Rejected',
+                              },
+                          }),
                     buttons: isAccept ? [{ id: 'stop-shell-command', text: 'Stop', icon: 'stop' }] : [],
                 },
             }
@@ -1803,39 +1800,39 @@ export class AgenticChatController implements ChatHandlers {
                 const commandString = (toolUse.input as unknown as ExecuteBashParams).command
                 buttons = requiresAcceptance
                     ? [
-                        { id: 'run-shell-command', text: 'Run', icon: 'play' },
-                        {
-                            id: 'reject-shell-command',
-                            status: 'dimmed-clear' as Status,
-                            text: 'Reject',
-                            icon: 'cancel',
-                        },
-                    ]
+                          { id: 'run-shell-command', text: 'Run', icon: 'play' },
+                          {
+                              id: 'reject-shell-command',
+                              status: 'dimmed-clear' as Status,
+                              text: 'Reject',
+                              icon: 'cancel',
+                          },
+                      ]
                     : []
 
                 const statusIcon =
                     commandCategory === CommandCategory.Destructive
                         ? 'warning'
                         : commandCategory === CommandCategory.Mutate
-                            ? 'info'
-                            : 'none'
+                          ? 'info'
+                          : 'none'
                 const statusType =
                     commandCategory === CommandCategory.Destructive
                         ? 'warning'
                         : commandCategory === CommandCategory.Mutate
-                            ? 'info'
-                            : undefined
+                          ? 'info'
+                          : undefined
 
                 header = {
                     status: requiresAcceptance
                         ? {
-                            icon: statusIcon,
-                            status: statusType,
-                            position: 'left',
-                            description: this.#getCommandCategoryDescription(
-                                commandCategory ?? CommandCategory.ReadOnly
-                            ),
-                        }
+                              icon: statusIcon,
+                              status: statusType,
+                              position: 'left',
+                              description: this.#getCommandCategoryDescription(
+                                  commandCategory ?? CommandCategory.ReadOnly
+                              ),
+                          }
                         : {},
                     body: 'shell',
                     buttons,
@@ -2027,8 +2024,8 @@ export class AgenticChatController implements ChatHandlers {
                 toolUse.name === 'fsRead'
                     ? `${itemCount} file${itemCount > 1 ? 's' : ''} read`
                     : toolUse.name === 'fileSearch'
-                        ? `${itemCount} ${itemCount === 1 ? 'directory' : 'directories'} searched`
-                        : `${itemCount} ${itemCount === 1 ? 'directory' : 'directories'} listed`
+                      ? `${itemCount} ${itemCount === 1 ? 'directory' : 'directories'} searched`
+                      : `${itemCount} ${itemCount === 1 ? 'directory' : 'directories'} listed`
         }
         const details: Record<string, FileDetails> = {}
         for (const item of filePathsPushed) {
@@ -2134,14 +2131,14 @@ export class AgenticChatController implements ChatHandlers {
         updatedRequestInput.conversationState!.currentMessage!.userInputMessage!.content = content
         // don't pass in IDE context again in the followup toolUse/toolResult loop as it confuses the model and is not necessary
         updatedRequestInput.conversationState!.currentMessage!.userInputMessage!.userInputMessageContext!.editorState =
-        {
-            ...updatedRequestInput.conversationState!.currentMessage!.userInputMessage!.userInputMessageContext!
-                .editorState,
-            document: undefined,
-            relevantDocuments: undefined,
-            cursorState: undefined,
-            useRelevantDocuments: false,
-        }
+            {
+                ...updatedRequestInput.conversationState!.currentMessage!.userInputMessage!.userInputMessageContext!
+                    .editorState,
+                document: undefined,
+                relevantDocuments: undefined,
+                cursorState: undefined,
+                useRelevantDocuments: false,
+            }
 
         for (const toolResult of toolResults) {
             this.#debug(`ToolResult: ${JSON.stringify(toolResult)}`)
@@ -2402,9 +2399,9 @@ export class AgenticChatController implements ChatHandlers {
 
             return result.success
                 ? {
-                    ...result.data.chatResult,
-                    requestId: response.$metadata.requestId,
-                }
+                      ...result.data.chatResult,
+                      requestId: response.$metadata.requestId,
+                  }
                 : new ResponseError<ChatResult>(LSPErrorCodes.RequestFailed, result.error)
         } catch (err) {
             this.#log(
@@ -2865,8 +2862,8 @@ export class AgenticChatController implements ChatHandlers {
             tabId: tabId ?? '',
             // data: { messages: [] },
         }
-            // Special flag recognized by `chat-client/src/client/mynahUi.ts`.
-            ; (o as any).paidTierMode = mode
+        // Special flag recognized by `chat-client/src/client/mynahUi.ts`.
+        ;(o as any).paidTierMode = mode
         this.#features.chat.sendChatUpdate(o)
     }
 

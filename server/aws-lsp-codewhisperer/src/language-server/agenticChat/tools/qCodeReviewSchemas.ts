@@ -114,6 +114,10 @@ export const Q_FINDING_SCHEMA = z.object({
     severity: z.enum(FINDING_SEVERITY as [string, ...string[]]),
     startLine: z.number(),
     title: z.string(),
+    detectorId: z.string().optional(),
+    detectorName: z.string().optional(),
+    ruleId: z.string().optional(),
+    suggestedFixes: z.array(z.string().optional()).optional(),
 })
 
 /**
