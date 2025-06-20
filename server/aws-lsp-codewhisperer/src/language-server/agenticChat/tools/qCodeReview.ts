@@ -11,7 +11,6 @@ import { PROGRAMMING_LANGUAGES_LOWERCASE, TOOL_NAME, TOOL_DESCRIPTION } from './
 import { QCodeReviewUtils } from './qCodeReviewUtils'
 import { INPUT_SCHEMA, Z_INPUT_SCHEMA, Q_FINDINGS_SCHEMA } from './qCodeReviewSchemas'
 import { randomUUID } from 'crypto'
-import { existsSync, statSync, readFileSync } from 'fs'
 import * as crypto from 'crypto'
 import * as path from 'path'
 import * as https from 'https'
@@ -180,7 +179,7 @@ export class QCodeReview {
                     ruleId?: string
                     relatedVulnerabilities: (string | undefined)[]
                     severity: string
-                    recommendation: { text: string; url?: (string | null) }
+                    recommendation: { text: string; url?: string | null }
                     suggestedFixes?: (string | undefined)[]
                     scanJobId: string
                     language: string

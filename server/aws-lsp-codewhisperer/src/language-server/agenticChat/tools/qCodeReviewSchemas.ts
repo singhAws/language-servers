@@ -119,10 +119,6 @@ export const Q_FINDING_SCHEMA = z.object({
     ruleId: z.string().optional(),
     suggestedFixes: z.array(z.string().optional()).optional(),
     findingContext: z.string().nullable().optional(),
-    detectorId: z.string().optional(),
-    detectorName: z.string().optional(),
-    ruleId: z.string().optional(),
-    suggestedFixes: z.array(z.string().optional()).optional(),
 })
 
 /**
