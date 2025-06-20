@@ -16,6 +16,7 @@ import * as crypto from 'crypto'
 import * as path from 'path'
 import * as https from 'https'
 import * as JSZip from 'jszip'
+import { existsSync, statSync, readFileSync } from 'fs'
 
 export class QCodeReview {
     private readonly logging: Features['logging']
