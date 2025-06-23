@@ -87,6 +87,7 @@ export const QCodeAnalysisServer: Server = ({
         telemetry,
         workspace,
     })
+    // const loadFindings = new LoadFindings({ workspace, lsp, logging })
 
     lsp.onInitialized(async () => {
         logging.info('LSP on initialize for QCodeAnalysisServer')
@@ -116,50 +117,17 @@ export const QCodeAnalysisServer: Server = ({
                 return await qCodeReviewTool.execute(input, { codeWhispererClient })
             }
         )
-    })
 
-    return () => {}
-}
-
-export const LoadFindingsServer: Server = ({
-    workspace,
-    logging,
-    agent,
-    lsp,
-    sdkInitializator,
-    credentialsProvider,
-}) => {
-    logging.info('LoadFindingsServer')
-    const loadFindings = new LoadFindings({ workspace, lsp, logging })
-
-    lsp.onInitialized(async () => {
-        logging.info('LSP on initialize for QCodeAnalysisServer')
-        // Get credentials provider from the LSP context
-        if (!credentialsProvider.hasCredentials) {
-            logging.error('Credentials provider not available')
-            return
-        }
-
-        // Create the CodeWhisperer client
-        const codeWhispererClient = new CodeWhispererServiceToken(
-            credentialsProvider,
-            workspace,
-            logging,
-            process.env.CODEWHISPERER_REGION || 'us-east-1',
-            process.env.CODEWHISPERER_ENDPOINT || 'https://codewhisperer.us-east-1.amazonaws.com/',
-            sdkInitializator
-        )
-
-        agent.addTool(
-            {
-                name: LoadFindings.toolName,
-                description: LoadFindings.toolDescription,
-                inputSchema: LoadFindings.inputSchema,
-            },
-            async (input: any) => {
-                return await loadFindings.execute(input, { codeWhispererClient })
-            }
-        )
+        // agent.addTool(
+        //     {
+        //         name: LoadFindings.toolName,
+        //         description: LoadFindings.toolDescription,
+        //         inputSchema: LoadFindings.inputSchema,
+        //     },
+        //     async (input: any) => {
+        //         return await loadFindings.execute(input, { codeWhispererClient })
+        //     }
+        // )
     })
 
     return () => {}

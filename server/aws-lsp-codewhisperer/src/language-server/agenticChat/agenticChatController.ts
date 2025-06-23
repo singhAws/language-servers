@@ -1334,6 +1334,8 @@ export class AgenticChatController implements ChatHandlers {
                             body: qCodeReviewJson['result']['findingsByFile'],
                         })
                         break
+                    case LoadFindings.toolName:
+                        break
                     // — DEFAULT ⇒ MCP tools
                     default:
                         await this.#handleMcpToolResult(toolUse, result, session, chatResultStream)
@@ -1946,6 +1948,7 @@ export class AgenticChatController implements ChatHandlers {
                 'fsReplace',
                 'fileSearch',
                 QCodeReview.toolName,
+                // LoadFindings.toolName,
             ].includes(toolName)
 
         if (isStandardTool) {

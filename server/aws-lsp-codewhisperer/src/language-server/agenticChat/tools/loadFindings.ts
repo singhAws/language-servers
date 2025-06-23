@@ -3,14 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { CodeWhispererServiceToken } from '../../../shared/codeWhispererService'
 import { Features } from '@aws/language-server-runtimes/server-interface/server'
-import {
-    EXTENSION_TO_LANGUAGE,
-    PROGRAMMING_LANGUAGES_LOWERCASE,
-    TOOL_NAME,
-    TOOL_DESCRIPTION,
-} from './loadFindingsConstants'
+import { TOOL_NAME, TOOL_DESCRIPTION } from './loadFindingsConstants'
 import { AggregatedCodeScanIssue } from './qCodeReviewUtils'
 import { INPUT_SCHEMA, Z_INPUT_SCHEMA } from './loadFindingsSchemas'
 import * as path from 'path'

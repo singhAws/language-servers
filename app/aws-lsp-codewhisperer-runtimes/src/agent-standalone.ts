@@ -14,7 +14,6 @@ import {
     FsToolsServer,
     QCodeAnalysisServer,
     McpToolsServer,
-    LoadFindingsServer,
 } from '@aws/lsp-codewhisperer/out/language-server/agenticChat/tools/toolServer'
 import { createTokenRuntimeProps } from './standalone-common'
 
@@ -34,7 +33,6 @@ const props = createTokenRuntimeProps(VERSION, [
     BashToolsServer,
     QLocalProjectContextServerTokenProxy,
     WorkspaceContextServerTokenProxy,
-    LoadFindingsServer,
     QCodeAnalysisServer,
     McpToolsServer,
     // LspToolsServer,
