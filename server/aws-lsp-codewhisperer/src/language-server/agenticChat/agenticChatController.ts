@@ -606,8 +606,8 @@ export class AgenticChatController implements ChatHandlers {
                 promptId,
                 session.conversationId,
                 token,
-                triggerContext.documentReference,
-                params.findingsPath
+                triggerContext.documentReference
+                // params.findingsPath
             )
 
             // Phase 5: Result Handling - This happens only once
